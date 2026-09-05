@@ -1,3 +1,9 @@
 <Solution>
+  <Folder Name="/Estrutura/">
+    <Project Path="Application/Application.csproj" Id="d4e3b22a-358c-49e8-be41-0f1d6500b6dc" />
+    <Project Path="Domain/Domain.csproj" Id="cb6cc383-f4be-4339-8bc7-ce1e77768279" />
+    <Project Path="Infra.Connect/Infra.Connect.csproj" Id="76399958-b92a-4158-818b-9c3fe00a78cf" />
+    <Project Path="Infra.Data/Infra.Data.csproj" Id="f11d5402-0b8a-43be-b39b-a307601ba9ee" />
+  </Folder>
   <Project Path="API/API.csproj" Id="711af4d5-c296-4810-9d50-ebcd6f6d5941" />
 </Solution>
