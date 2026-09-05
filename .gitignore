@@ -1,0 +1,61 @@
+# Compilacao do .NET
+[Bb]in/
+[Oo]bj/
+artifacts/
+TestResults/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Extensoes e caches do Visual Studio
+.vscode/
+.ionide/
+*.code-workspace
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+!**/[Pp]ackages/repositories.config
+project.lock.json
+project.fragment.lock.json
+
+# Relatorios, cobertura e logs
+*.trx
+*.coverage
+*.coveragexml
+*.log
+*.sarif
+coverage/
+coverage*.json
+
+# Arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos locais e possiveis segredos de configuracao
+appsettings.*.local.json
+appsettings.*.secret.json
+secrets.json
+
+# Ferramentas de desenvolvimento locais
+*.pidb
+*.svclog
+*.userprefs
+*.sln.iml
+
+# JetBrains Rider/ReSharper
+.idea/
+_ReSharper*/
+*.[Rr]e[Ss]harper.user
+
+# Arquivos gerados por ferramentas de desenvolvimento
+*.njsproj
+*.ntvs_analysis.dat
+node_modules/
