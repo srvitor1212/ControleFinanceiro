@@ -1,0 +1,35 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+
+# Test and coverage output
+TestResults/
+coverage/
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# IDEs
+.idea/
+.vscode/
+*.DotSettings.user
+
+# Logs and local environment files
+*.log
+*.local.json
+
+# Blazor generated assets
+Frontend/wwwroot/service-worker-assets.js
+
+# Operating system files
+.DS_Store
+Thumbs.db
