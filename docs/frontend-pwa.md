@@ -2,21 +2,27 @@
 
 ## Escopo atual
 
-O diretório `Frontend/` contém uma aplicação Blazor WebAssembly direcionada ao .NET 10. Ela é o cliente executado no navegador; o projeto atual ainda corresponde ao template inicial do Blazor e não implementa telas, regras ou dados de controle financeiro, autenticação ou comunicação com a pasta `Api/`.
+O diretório `Frontend/` contém uma aplicação Blazor WebAssembly direcionada ao .NET 10. Ela é o cliente executado no navegador. A rota inicial implementa o login no `auth-service`; as demais páginas de exemplo do template ainda permanecem no projeto.
 
-O ponto de entrada é `Frontend/Program.cs`. Ele registra `App` no elemento `#app`, adiciona o `HeadOutlet` e disponibiliza um `HttpClient` cujo endereço-base é a própria origem em que o frontend foi servido.
+O ponto de entrada é `Frontend/Program.cs`. Ele registra `App` no elemento `#app`, adiciona o `HeadOutlet`, disponibiliza um `HttpClient` cujo endereço-base é a própria origem em que o frontend foi servido e registra `AuthServiceClient`. Este último usa a URL configurada em `AuthService:BaseUrl`, cujo valor padrão é `https://localhost:7070/`.
 
 ## Páginas e rotas
 
 | Rota | Componente | Comportamento atual |
 | --- | --- | --- |
-| `/` | `Pages/Home.razor` | Mostra a mensagem inicial do template: “Hello, world!”. |
+| `/` | `Pages/Home.razor` | Exibe o formulário de login e é a tela inicial da aplicação. |
 | `/counter` | `Pages/Counter.razor` | Exibe um contador local iniciado em zero e um botão que o incrementa. O estado não é persistido. |
 | `/weather` | `Pages/Weather.razor` | Carrega e mostra uma tabela de previsões de exemplo. |
 | `/not-found` | `Pages/NotFound.razor` | Exibe a mensagem de conteúdo não encontrado. |
 | Qualquer rota não mapeada | `Pages/NotFound.razor` | O `Router` de `App.razor` direciona a página não encontrada para esse componente. |
 
 As páginas são renderizadas com `MainLayout`, exceto quando um componente definir outro layout. O roteador também move o foco para o primeiro `h1` após a navegação.
+
+## Login
+
+A página inicial solicita e-mail e senha e executa validação local para ambos os campos antes de enviar um JSON para `POST /api/auth/login` do `auth-service`. Erros de credenciais, de validação HTTP ou de conexão são mostrados na própria tela. Quando a resposta é `200 OK`, o navegador apresenta o alerta “Login realizado com sucesso.”.
+
+O `accessToken` retornado no sucesso não é lido, persistido nem enviado a outras chamadas neste estágio. Portanto, ainda não há sessão autenticada, renovação de token ou autorização de rotas no frontend.
 
 ## Layout e navegação
 
@@ -68,8 +74,14 @@ O perfil `frontend` em `Frontend/Properties/launchSettings.json` abre o navegado
 - `https://localhost:8181`
 - `http://localhost:8282`
 
-Essas portas são valores do perfil de desenvolvimento e podem ser substituídas por argumentos ou configurações do ambiente ao executar o projeto. O `HttpClient` configurado no frontend continuará apontando para a origem em uso, não para uma URL da API.
+Essas portas são valores do perfil de desenvolvimento e podem ser substituídas por argumentos ou configurações do ambiente ao executar o projeto. O `HttpClient` configurado para arquivos locais continuará apontando para a origem em uso. Para login, `AuthServiceClient` usa `AuthService:BaseUrl`; mantenha esse valor e as origens CORS do `auth-service` alinhados ao ambiente em que o frontend for servido.
 
 ## Limitações conhecidas
 
-Esta documentação descreve somente o frontend presente no repositório. A nomenclatura do projeto e a descrição textual de Weather são herdadas do template; elas não comprovam a existência de backend, dados financeiros, login, renovação de token ou integração com a API no código atual.
+As páginas Counter e Weather, a nomenclatura do projeto e a descrição textual de Weather são herdadas do template. Não há telas ou dados financeiros, armazenamento/renovação de token, nem integração com a API financeira do projeto.
+
+## Histórico de alterações
+
+| Data e hora (UTC) | Alteração |
+| --- | --- |
+| 2026-09-08 00:00:00 UTC | Documentado o login inicial integrado ao auth-service e a ausência intencional de persistência do token. |

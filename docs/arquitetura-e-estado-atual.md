@@ -9,7 +9,7 @@ O `ControleFinanceiro.slnx` referencia dois projetos .NET 10:
 | `Api/Backend.csproj` | ASP.NET Core Web API | Expõe controllers HTTP; no estado atual, somente a previsão do tempo de exemplo. |
 | `Frontend/Frontend.csproj` | Blazor WebAssembly PWA | Executa no navegador e contém as telas e o estado de interface de exemplo. |
 
-Os dois projetos são independentes: não há referência de projeto entre eles. Em desenvolvimento, os perfis de inicialização usam, respectivamente, `https://localhost:7171`/`http://localhost:7272` para a API e `https://localhost:8181`/`http://localhost:8282` para o frontend.
+Os dois projetos são independentes: não há referência de projeto entre eles. Em desenvolvimento, os perfis de inicialização usam, respectivamente, `https://localhost:7171`/`http://localhost:7272` para a API e `https://localhost:8181`/`http://localhost:8282` para o frontend. O frontend também consome o `auth-service`, que é um serviço externo a esta solução.
 
 ## Composição técnica
 
@@ -32,14 +32,14 @@ Os arquivos de configuração da API possuem apenas logging e `AllowedHosts`; n�
 
 O projeto `Frontend` usa o SDK `Microsoft.NET.Sdk.BlazorWebAssembly`, `net10.0` e as dependências `Microsoft.AspNetCore.Components.WebAssembly` e `Microsoft.AspNetCore.Components.WebAssembly.DevServer`, ambas na versão 10.0.11. Ele contém configuração de PWA, manifest, ícones e service worker.
 
-O bootstrap registra `App` e `HeadOutlet` e disponibiliza um `HttpClient` scoped cuja base é a mesma origem que serve o frontend. As rotas de interface são:
+O bootstrap registra `App` e `HeadOutlet`, disponibiliza um `HttpClient` scoped cuja base é a mesma origem que serve o frontend e registra `AuthServiceClient` com a URL em `AuthService:BaseUrl` (por padrão, `https://localhost:7070/`). As rotas de interface são:
 
-- `/`: página inicial do template;
+- `/`: tela inicial de login;
 - `/counter`: contador mantido localmente no componente;
 - `/weather`: demonstração de previsão do tempo;
 - `/not-found`: página de não encontrado.
 
-Embora a página `/weather` injete `HttpClient`, ela requisita `sample-data/weather.json` sob os arquivos estáticos do próprio frontend. Ela não consulta `GET /WeatherForecast` da API. As configurações do frontend também contêm somente logging e `AllowedHosts`.
+Embora a página `/weather` injete `HttpClient`, ela requisita `sample-data/weather.json` sob os arquivos estáticos do próprio frontend. Ela não consulta `GET /WeatherForecast` da API. A página `/` envia as credenciais ao `POST /api/auth/login` do `auth-service`; em caso de sucesso, mostra somente um alerta e descarta o token retornado.
 
 ## Separação prevista e implementação observada
 
@@ -56,10 +56,16 @@ As observações abaixo descrevem o que não está presente no código e nas con
 - **Domínio financeiro:** não há entidades, endpoints, telas, contratos ou regras para registrar ou controlar dívidas pessoais, apesar de esse ser o objetivo declarado do projeto.
 - **Persistência:** não há pacote ou configuração de acesso a banco, `DbContext`, migrations, repositórios ou connection string. O único dado retornado pela API é criado em memória para cada requisição.
 - **Autenticação e autorização JWT:** a API chama `UseAuthorization()`, mas não registra autenticação JWT (`AddAuthentication`/`AddJwtBearer`), não chama `UseAuthentication()` e não define parâmetros de emissor, audiência, assinatura ou expiração. Também não há endpoints ou atributos de autorização no controller atual. Portanto, o comportamento de validação de token, `401` e `403` prescrito no `AGENTS.md` não está configurado.
-- **Integração com o `auth-service`:** não há URL, cliente HTTP, fluxo de login, renovação de token, armazenamento de token ou cabeçalho `Authorization: Bearer` no frontend; tampouco há configuração correspondente na API.
+- **Integração com o `auth-service`:** o frontend tem a URL configurável `AuthService:BaseUrl`, um cliente HTTP para login e tratamento dos erros de resposta. O token de sucesso é deliberadamente descartado; ainda não há renovação, armazenamento de token ou cabeçalho `Authorization: Bearer`.
 - **Integração frontend--API:** as origens configuradas para desenvolvimento são diferentes e não há `HttpClient` apontando para a URL da API, política CORS, proxy, nem código que chame seus endpoints. A única chamada da tela de clima é ao JSON estático local.
 - **Validação e testes:** não há validações de entrada ou testes automatizados entre os arquivos-fonte e projetos presentes na solução.
 
 ## Limites desta leitura
 
-Este documento representa os arquivos versionados encontrados em `Api/`, `Frontend/`, `ControleFinanceiro.slnx` e `AGENTS.md`. Artefatos gerados, diretórios de IDE e dependências instaladas não foram tratados como fonte de arquitetura. A existência ou a configuração de serviços externos, como o `auth-service`, não pode ser inferida deste repositório.
+Este documento representa os arquivos versionados encontrados em `Api/`, `Frontend/`, `ControleFinanceiro.slnx` e `AGENTS.md`. Artefatos gerados, diretórios de IDE e dependências instaladas não foram tratados como fonte de arquitetura. A disponibilidade do `auth-service` e os valores efetivamente aplicados fora das configurações versionadas não foram verificados.
+
+## Histórico de alterações
+
+| Data e hora (UTC) | Alteração |
+| --- | --- |
+| 2026-09-08 00:00:00 UTC | Registrada a integração inicial do frontend com o auth-service para login, sem persistência de token. |
