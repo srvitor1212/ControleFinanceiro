@@ -32,7 +32,7 @@ Os arquivos de configuração da API possuem apenas logging e `AllowedHosts`; n�
 
 O projeto `Frontend` usa o SDK `Microsoft.NET.Sdk.BlazorWebAssembly`, `net10.0` e as dependências `Microsoft.AspNetCore.Components.WebAssembly` e `Microsoft.AspNetCore.Components.WebAssembly.DevServer`, ambas na versão 10.0.11. Ele contém configuração de PWA, manifest, ícones e service worker.
 
-O bootstrap registra `App` e `HeadOutlet`, disponibiliza um `HttpClient` scoped cuja base é a mesma origem que serve o frontend e registra `AuthServiceClient` com a URL em `AuthService:BaseUrl` (por padrão, `https://localhost:7070/`). As rotas de interface são:
+O bootstrap registra `App` e `HeadOutlet`, disponibiliza um `HttpClient` scoped cuja base é a mesma origem que serve o frontend e registra `AuthServiceClient` com a URL `AuthService:BaseUrl` de `Frontend/wwwroot/appsettings.json` (por padrão, `https://localhost:7070/`). As rotas de interface são:
 
 - `/`: tela inicial de login;
 - `/counter`: contador mantido localmente no componente;
@@ -68,4 +68,6 @@ Este documento representa os arquivos versionados encontrados em `Api/`, `Fronte
 
 | Data e hora (UTC) | Alteração |
 | --- | --- |
+| 2026-09-09 02:57:51 UTC | Movidos os arquivos de configuração do frontend para `wwwroot`. |
+| 2026-09-09 02:50:58 UTC | Corrigida a origem da configuração do auth-service para o arquivo-base do frontend. |
 | 2026-09-08 00:00:00 UTC | Registrada a integração inicial do frontend com o auth-service para login, sem persistência de token. |

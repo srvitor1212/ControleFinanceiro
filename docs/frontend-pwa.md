@@ -4,7 +4,7 @@
 
 O diretório `Frontend/` contém uma aplicação Blazor WebAssembly direcionada ao .NET 10. Ela é o cliente executado no navegador. A rota inicial implementa o login no `auth-service`; as demais páginas de exemplo do template ainda permanecem no projeto.
 
-O ponto de entrada é `Frontend/Program.cs`. Ele registra `App` no elemento `#app`, adiciona o `HeadOutlet`, disponibiliza um `HttpClient` cujo endereço-base é a própria origem em que o frontend foi servido e registra `AuthServiceClient`. Este último usa a URL configurada em `AuthService:BaseUrl`, cujo valor padrão é `https://localhost:7070/`.
+O ponto de entrada é `Frontend/Program.cs`. Ele registra `App` no elemento `#app`, adiciona o `HeadOutlet`, disponibiliza um `HttpClient` cujo endereço-base é a própria origem em que o frontend foi servido e registra `AuthServiceClient`. Este último usa `AuthService:BaseUrl`, definido em `Frontend/wwwroot/appsettings.json` como `https://localhost:7070/`; mantenha essa chave no arquivo-base público para que esteja disponível durante a inicialização no navegador.
 
 ## Páginas e rotas
 
@@ -74,7 +74,7 @@ O perfil `frontend` em `Frontend/Properties/launchSettings.json` abre o navegado
 - `https://localhost:8181`
 - `http://localhost:8282`
 
-Essas portas são valores do perfil de desenvolvimento e podem ser substituídas por argumentos ou configurações do ambiente ao executar o projeto. O `HttpClient` configurado para arquivos locais continuará apontando para a origem em uso. Para login, `AuthServiceClient` usa `AuthService:BaseUrl`; mantenha esse valor e as origens CORS do `auth-service` alinhados ao ambiente em que o frontend for servido.
+Essas portas são valores do perfil de desenvolvimento e podem ser substituídas por argumentos ou configurações do ambiente ao executar o projeto. O `HttpClient` configurado para arquivos locais continuará apontando para a origem em uso. Para login, `AuthServiceClient` usa `AuthService:BaseUrl` de `Frontend/wwwroot/appsettings.json`; mantenha esse valor e as origens CORS do `auth-service` alinhados ao ambiente em que o frontend for servido.
 
 ## Limitações conhecidas
 
@@ -84,4 +84,6 @@ As páginas Counter e Weather, a nomenclatura do projeto e a descrição textual
 
 | Data e hora (UTC) | Alteração |
 | --- | --- |
+| 2026-09-09 02:57:51 UTC | Movidos os arquivos de configuração para `wwwroot`, local carregado automaticamente pelo Blazor WebAssembly. |
+| 2026-09-09 02:50:58 UTC | Movida a URL do auth-service para `appsettings.json`, evitando falha de inicialização quando a configuração específica de ambiente não é carregada no navegador. |
 | 2026-09-08 00:00:00 UTC | Documentado o login inicial integrado ao auth-service e a ausência intencional de persistência do token. |
