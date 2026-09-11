@@ -1,0 +1,72 @@
+@page "/login"
+@inject Frontend.Services.IAuthService AuthService
+@inject Frontend.Services.ISessionService SessionService
+@inject NavigationManager Navigation
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<form @onsubmit="HandleSubmitAsync" @onsubmit:preventDefault="true" novalidate>
+    <div class="mb-3">
+        <label for="email" class="form-label">E-mail</label>
+        <input id="email" name="email" type="email" class="form-control" autocomplete="username" @bind="email" disabled="@isSubmitting" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Senha</label>
+        <input id="password" name="password" type="password" class="form-control" autocomplete="current-password" @bind="password" disabled="@isSubmitting" />
+    </div>
+
+    @if (errors.Count > 0)
+    {
+        <div class="alert alert-danger" role="alert" aria-live="assertive">
+            <ul class="mb-0">
+                @foreach (var error in errors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+        @(isSubmitting ? "Entrando..." : "Entrar")
+    </button>
+</form>
+
+@code {
+    private const string SessionFailureMessage = "Não foi possível salvar sua sessão. Tente novamente.";
+
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private bool isSubmitting;
+    private IReadOnlyList<string> errors = Array.Empty<string>();
+
+    private async Task HandleSubmitAsync()
+    {
+        if (isSubmitting)
+        {
+            return;
+        }
+
+        isSubmitting = true;
+        errors = Array.Empty<string>();
+
+        try
+        {
+            var result = await AuthService.LoginAsync(email, password);
+            if (result.IsSuccess && await SessionService.StoreAsync(result.AccessToken, result.ExpiresAt))
+            {
+                Navigation.NavigateTo("/", replace: true);
+                return;
+            }
+
+            errors = result.IsSuccess ? [SessionFailureMessage] : result.Errors;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

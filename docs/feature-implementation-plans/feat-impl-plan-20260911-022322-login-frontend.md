@@ -1,7 +1,7 @@
 # Plano de implementação: login no frontend
 
-> **Estado da implementação:** Plano criado
-> **Última atualização (UTC):** 2026-09-11 02:23:22 UTC
+> **Estado da implementação:** Implementação iniciada
+> **Última atualização (UTC):** 2026-09-11 02:45:06 UTC
 > **Documento de requisitos:** [feat-req-20260911-020935-login-frontend.md](../features/feat-req-20260911-020935-login-frontend.md)
 
 ## Objetivo e escopo
@@ -268,6 +268,19 @@ contas e tokens descartáveis de ambiente de desenvolvimento:
 | Revisar console, captura de rede e pontos de diagnóstico adicionados | RNF-003 | Nenhuma senha ou token exposto fora do armazenamento e da requisição indispensável. |
 | Executar com URL do serviço alterada por configuração de implantação | RNF-001 | A chamada usa a instância configurada, sem alteração do código cliente. |
 
+### Resultados da implementação
+
+- 2026-09-11 02:44:19 UTC — `dotnet build Frontend/Frontend.csproj`:
+  concluído com êxito, sem avisos ou erros.
+- 2026-09-11 02:45:06 UTC — uma repetição dentro do sandbox falhou ao criar o
+  host interno do MSBuild (`ComputeWasmBuildAssets`); a mesma compilação foi
+  repetida fora dessa restrição, sem alterações de código, e concluída com
+  êxito, sem avisos ou erros.
+- Os cenários manuais que dependem de navegador e de uma instância do
+  `auth-service` com CORS configurado não foram executados neste ambiente. Por
+  isso, os passos permanecem desmarcados até a validação integrada confirmar os
+  comportamentos previstos.
+
 ## Rastreabilidade dos requisitos
 
 | Requisito ou critério | Passos | Validação |
@@ -317,3 +330,6 @@ contas e tokens descartáveis de ambiente de desenvolvimento:
 | Data e hora (UTC) | Alteração |
 | --- | --- |
 | 2026-09-11 02:23:22 UTC | Plano criado a partir de `docs/features/feat-req-20260911-020935-login-frontend.md`. |
+| 2026-09-11 02:39:42 UTC | Implementação iniciada. |
+| 2026-09-11 02:44:19 UTC | Código dos passos 1 a 5 implementado; `dotnet build Frontend/Frontend.csproj` concluído sem avisos ou erros. Passos permanecem pendentes de validação manual integrada com `auth-service` e navegador. |
+| 2026-09-11 02:45:06 UTC | Repetição de build concluída sem avisos ou erros fora do sandbox; a tentativa no sandbox falhou apenas ao criar o host interno do MSBuild. |

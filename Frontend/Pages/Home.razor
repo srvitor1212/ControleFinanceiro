@@ -1,7 +1,27 @@
-﻿@page "/"
+@page "/"
+@inject Frontend.Services.ISessionService SessionService
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+@if (showHome)
+{
+    <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+    <h1>Hello, world!</h1>
 
-Welcome to your new app.
+    <p>Welcome to your new app.</p>
+}
+
+@code {
+    private bool showHome;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await SessionService.HasValidSessionAsync())
+        {
+            Navigation.NavigateTo("/login", replace: true);
+            return;
+        }
+
+        showHome = true;
+    }
+}
